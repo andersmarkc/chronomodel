@@ -22,7 +22,8 @@ module ActiveRecord
       end
 
       def data_dump(target)
-        set_psql_env
+        set_psql_env if ActiveRecord::VERSION::STRING < '7.0'
+        psql_env if ActiveRecord::VERSION::STRING >= '7.0'
 
         args = ['-c', '-f', target.to_s]
         args << configuration[:database]
@@ -31,7 +32,8 @@ module ActiveRecord
       end
 
       def data_load(source)
-        set_psql_env
+        set_psql_env if ActiveRecord::VERSION::STRING < '7.0'
+        psql_env if ActiveRecord::VERSION::STRING >= '7.0'
 
         args = ['-f', source]
         args << configuration[:database]

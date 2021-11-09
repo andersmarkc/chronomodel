@@ -4,6 +4,12 @@ module ChronoModel
     module Relation
       include ChronoModel::Patches::AsOfTimeHolder
 
+      ## remove preload for now since is just an optimization
+      def preload_associations(records) # :nodoc:
+        return if ActiveRecord::VERSION::STRING >= '7.0'
+        return super
+      end
+
       def load
         return super unless @_as_of_time && !loaded?
 
