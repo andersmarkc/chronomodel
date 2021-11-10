@@ -6,8 +6,22 @@ module ChronoModel
 
       ## remove preload for now since is just an optimization
       def preload_associations(records) # :nodoc:
-        return if ActiveRecord::VERSION::STRING >= '7.0'
-        return super
+        return super if ActiveRecord::VERSION::STRING < '7.0'
+        preload = preload_values
+        preload += includes_values unless eager_loading?
+        scope = strict_loading_value ? StrictLoadingScope : nil
+        preload.each do |associations|
+          if as_of_time
+            ## the tree structure of preloading ensure that children are loaded from history
+            klass  = if associations.is_a? Hash
+              associations.keys[0].to_s.classify.constantize
+            else
+              associations.to_s.classify.constantize
+            end
+            scope = klass.as_of(as_of_time) if klass.respond_to?(:as_of)
+          end
+          ActiveRecord::Associations::Preloader.new(records: records, associations: associations, scope: scope).call
+        end
       end
 
       def load
