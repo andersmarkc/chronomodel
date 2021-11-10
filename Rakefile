@@ -1,4 +1,5 @@
 require "bundler/gem_tasks"
+require "rails"
 
 # RSpec
 require 'rspec/core/rake_task'
@@ -16,7 +17,11 @@ namespace :testapp do
     FileUtils.mkdir_p('tmp/aruba')
     Dir.chdir('tmp') do
       FileUtils.rm_rf('railsapp')
+      if Rails.version < '7.0'
       sh 'rails new railsapp --skip-bundle --skip-webpack-install --skip-git'
+      else
+        sh 'rails new railsapp --skip-bundle --skip-javascript --skip-git'
+      end
     end
     FileUtils.cp_r('spec/aruba/fixtures/railsapp/.', 'tmp/railsapp/')
     FileUtils.rm('tmp/railsapp/Gemfile')
