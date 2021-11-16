@@ -4,9 +4,9 @@ module ChronoModel
     module Relation
       include ChronoModel::Patches::AsOfTimeHolder
 
-      ## remove preload for now since is just an optimization
       def preload_associations(records) # :nodoc:
         return super if ActiveRecord::VERSION::STRING < '7.0'
+
         preload = preload_values
         preload += includes_values unless eager_loading?
         scope = strict_loading_value ? StrictLoadingScope : nil

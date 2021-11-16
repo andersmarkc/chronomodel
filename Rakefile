@@ -18,7 +18,7 @@ namespace :testapp do
     Dir.chdir('tmp') do
       FileUtils.rm_rf('railsapp')
       if Rails.version < '7.0'
-      sh 'rails new railsapp --skip-bundle --skip-webpack-install --skip-git'
+        sh 'rails new railsapp --skip-bundle --skip-webpack-install --skip-git'
       else
         sh 'rails new railsapp --skip-bundle --skip-javascript --skip-git'
       end
