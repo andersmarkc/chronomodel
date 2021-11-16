@@ -28,7 +28,7 @@ Rails.application.configure do
   if Rails.version < '7.0'
     config.assets.debug = true
 
-  # Suppress logger output for asset requests.
+    # Suppress logger output for asset requests.
     config.assets.quiet = true
   end
 
