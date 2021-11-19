@@ -22,8 +22,7 @@ module ActiveRecord
       end
 
       def data_dump(target)
-        set_psql_env if ActiveRecord::VERSION::STRING < '7.0'
-        psql_env if ActiveRecord::VERSION::STRING >= '7.0'
+        set_psql_env 
 
         args = ['-c', '-f', target.to_s]
         args << configuration[:database]
@@ -32,8 +31,7 @@ module ActiveRecord
       end
 
       def data_load(source)
-        set_psql_env if ActiveRecord::VERSION::STRING < '7.0'
-        psql_env if ActiveRecord::VERSION::STRING >= '7.0'
+        set_psql_env
 
         args = ['-f', source]
         args << configuration[:database]
@@ -43,6 +41,14 @@ module ActiveRecord
 
       private
 
+      def set_psql_env
+        if ActiveRecord::VERSION::STRING < '7.0'
+          super
+        else
+          psql_env
+        end
+
+      end
       def configuration
         # In Rails 6.1.x the configuration instance variable is not available
         # and it's been replaced by @configuration_hash (which is frozen).
